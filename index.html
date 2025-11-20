@@ -18,7 +18,8 @@
 
     body {
       font-family: Arial, sans-serif;
-      background-color: #ffffff;
+
+      /* Keep your horse background */
       background-image: url('horse.jpg');
       background-repeat: repeat;
       background-position: 0 0;
@@ -34,50 +35,53 @@
 
     .container {
       text-align: center;
-      background: #001f4d;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      max-width: 500px;
+      background: rgba(45, 0, 77, 0.92); /* plum with transparency */
+      padding: 35px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+      max-width: 520px;
       width: 90%;
-      position: relative;
+      backdrop-filter: blur(2px);
     }
 
     h1 {
       margin-bottom: 20px;
-      font-size: 2.5rem;
+      font-size: 2.6rem;
       color: #ffffff;
-      line-height: 1.2;
+      font-weight: bold;
+      text-shadow: 0 0 8px rgba(200, 162, 255, 0.7);
     }
 
     .link-list {
       display: grid;
-      gap: 12px;
+      gap: 14px;
     }
 
     .link-list a {
       display: block;
-      padding: 12px;
+      padding: 14px;
       text-decoration: none;
-      background: #355E3B;
+      background: #6a0dad; /* main purple */
       color: white;
       font-weight: bold;
       font-size: 1.5rem;
-      border-radius: 8px;
-      transition: background 0.3s, transform 0.2s;
+      border-radius: 10px;
+      border: 2px solid #c8a2ff;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 0 10px rgba(106, 13, 173, 0.4);
     }
 
     .link-list a:hover {
-      background: #4C7C50;
-      transform: scale(1.03);
+      background: #8d39ff;
+      transform: scale(1.05);
+      box-shadow: 0 0 14px rgba(178, 123, 255, 0.7);
     }
 
     .views-counter {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      font-size: 0.75rem;
-      color: #ccc;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #e6d6ff;
+      opacity: 0.8;
     }
 
     @media (max-width: 768px) {
@@ -88,19 +92,20 @@
 
     @media (max-width: 480px) {
       h1 {
-        font-size: 2rem;
+        font-size: 2.1rem;
       }
 
       .link-list a {
-        font-size: 1.2rem;
-        padding: 10px;
+        font-size: 1.25rem;
+        padding: 12px;
       }
     }
   </style>
 </head>
+
 <body>
   <div class="container" role="main" aria-label="Colleen Barrel Racing Links">
-    <h1>Creekview Grizzlies<br>8th Grade Football</h1>
+    <h1>Colleen Barrel Racing</h1>
 
     <div class="link-list">
       <a href="Practice 1-17-2025.html">Practice - 1/17/2025</a>
@@ -118,7 +123,6 @@
   </div>
 
   <script>
-    // --- Firebase Config ---
     const firebaseConfig = {
       apiKey: "AIzaSyBPJGqsH_pLXffDt6ol3SOxgC9joKUdKm4",
       authDomain: "footballvideocounter.firebaseapp.com",
@@ -128,7 +132,6 @@
       appId: "1:126776947656:web:cf05806375edaa3c27c6fd"
     };
 
-    // --- Initialize Firebase ---
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
@@ -136,7 +139,6 @@
     const counter = document.getElementById("viewCounter");
     counter.textContent = "Loading views...";
 
-    // --- Increment view count once per page load ---
     db.runTransaction(async (tx) => {
       const ref = db.collection("videoPlays").doc(id);
       const doc = await tx.get(ref);
@@ -145,21 +147,14 @@
       return newCount;
     })
     .then((newCount) => {
-      // Temporary update until real-time listener takes over
       counter.textContent = `Views: ${newCount}`;
     })
-    .catch((err) => {
-      console.error("Transaction failed:", err);
+    .catch(() => {
       counter.textContent = "Views: N/A";
     });
 
-    // --- Real-time live updates ---
     db.collection("videoPlays").doc(id).onSnapshot((doc) => {
-      if (doc.exists) {
-        counter.textContent = `Views: ${doc.data().count}`;
-      } else {
-        counter.textContent = "Views: 0";
-      }
+      counter.textContent = doc.exists ? `Views: ${doc.data().count}` : "Views: 0";
     });
   </script>
 </body>
