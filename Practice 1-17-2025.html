@@ -1,176 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Colleen Practice 1-17-2025</title>
+<meta charset="UTF-8" />
+<title>Colleen Practice 1-17-2025</title>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #001f4d;
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #ffe6f2;
+    margin: 0;
+    padding: 0;
+  }
+
+  .page-title {
+    text-align: center;
+    margin-bottom: 2em;
+  }
+
+  .page-title h1 {
+    color: white;
+    background-color: #ff69b4;
+    padding: 0.75em 1.5em;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 3.5em;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.7);
+  }
+
+  /* Video card */
+  .video-wrapper {
+    background-color: #ffffff;
+    border: 3px solid #ff69b4;
+    max-width: 640px;
+    margin: 2em auto;
+    text-align: center;
+    padding: 1.5em;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
+  }
+
+  .video-title {
+    margin: 0.5em auto;
+    font-size: 2.2em;
+    font-weight: bold;
+    color: #ff69b4;
+  }
+
+  .video-views {
+    text-align: right;
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  video {
+    width: 100%;
+    border: 2px solid #ff69b4;
+    border-radius: 10px;
+  }
+
+  /* Image grid */
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2em;
+    max-width: 900px;
+    margin: 2em auto;
+    padding: 1em;
+  }
+
+  .image-card {
+    background: #fff;
+    border: 3px solid #ff69b4;
+    padding: 1em;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
+  }
+
+  .image-card img {
+    width: 100%;
+    border-radius: 10px;
+    border: 2px solid #ff69b4;
+  }
+
+  .image-title {
+    margin-top: 0.5em;
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #ff69b4;
+  }
+
+  @media (max-width: 768px) {
+    .image-grid {
+      grid-template-columns: 1fr;
     }
+  }
+</style>
 
-    .page-title {
-      text-align: center;
-      margin-bottom: 2em;
-    }
-
-    .page-title h1 {
-      color: #001f4d;
-      background-color: #355E3B;
-      padding: 0.75em 1.5em;
-      border-radius: 6px;
-      display: inline-block;
-      font-size: 4em;
-      font-weight: bold;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-    }
-
-    .video-wrapper {
-      background-color: #355E3B;
-      color: #001f4d;
-      max-width: 640px;
-      margin: 2em auto;
-      text-align: center;
-      padding: 1em;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .video-title {
-      margin: 0.5em auto;
-      font-size: 3em;
-      font-weight: bold;
-      color: #001f4d;
-      border: 2px solid #355E3B;
-      padding: 0.5em 1em;
-      border-radius: 6px;
-      width: 50%;
-    }
-
-    .video-views {
-      text-align: right;
-      font-size: 0.425em;
-      margin-top: 0.3em;
-      color: #ccc;
-    }
-
-    video {
-      display: block;
-      width: 100%;
-      max-width: 640px;
-      background: #355E3B;
-      margin: 0 auto;
-      border: 1px solid #ccc;
-    }
-
-    @media (max-width: 768px) {
-      .video-title {
-        font-size: 1.8em;
-        width: 80%;
-      }
-      .page-title h1 {
-        font-size: 3em;
-      }
-    }
-  </style>
 </head>
-
 <body>
-  <div id="access"></div>
-  <div id="content" style="display:none;">
-    <div class="page-title">
-      <h1>Colleen Practice 1-17-2025</h1>
-    </div>
-    <div id="videoContainer"></div>
-  </div>
+
+<div class="page-title">
+  <h1>Colleen Practice 1-17-2025</h1>
+</div>
+
+<div id="videoContainer"></div>
+<div id="imageContainer" class="image-grid"></div>
 
 <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyBPJGqsH_pLXffDt6ol3SOxgC9joKUdKm4",
-        authDomain: "footballvideocounter.firebaseapp.com",
-        projectId: "footballvideocounter",
-        storageBucket: "footballvideocounter.appspot.com",
-        messagingSenderId: "126776947656",
-        appId: "1:126776947656:web:cf05806375edaa3c27c6fd"
-      };
+  /***************
+   FIREBASE SETUP
+  ****************/
+  const firebaseConfig = {
+    apiKey: "AIzaSyCU29My7XpW72O2YtcOuIo167qoXHNbkKQ",
+    authDomain: "colleenbarrelracing.firebaseapp.com",
+    projectId: "colleenbarrelracing",
+    storageBucket: "colleenbarrelracing.firebasestorage.app",
+    messagingSenderId: "561166285132",
+    appId: "1:561166285132:web:cad667c0d6b26041bd37e9",
+    measurementId: "G-R0DXRV6RK4"
+  };
 
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-      const folder = 'practice_1-17-2025';
-      const prefix = 'Colleen';
-      const total = 15;
-      const container = document.getElementById('videoContainer');
+  /***************
+    SETTINGS
+  ****************/
+  const folder = "practice_1-17-2025";
+  const prefix = "Colleen";
+  const total = 15;
 
-for (let i = 1; i <= total; i++) {
-  const num = String(i).padStart(2, '0');
-  const id = `${prefix}_${num}`;
-  let counted = false; // <— declare inside loop, unique to each video
+  const videoContainer = document.getElementById("videoContainer");
+  const imageContainer = document.getElementById("imageContainer");
 
-  const wrapper = document.createElement('div');
-  wrapper.className = 'video-wrapper';
 
-  const title = document.createElement('div');
-  title.className = 'video-title';
-  title.textContent = `${prefix} ${i}`;
+  /**********************
+    CHECK FILE EXISTENCE
+  ***********************/
+  function fileExists(url) {
+    return fetch(url, { method: "HEAD" }).then(res => res.ok).catch(() => false);
+  }
 
-  const video = document.createElement('video');
-  video.controls = true;
+  /**********************
+    MAIN LOOP
+  ***********************/
+  async function loadMedia() {
+    for (let i = 1; i <= total; i++) {
+      const num = String(i).padStart(2, "0");
+      const id = `${prefix}_${num}`;
 
-  const source = document.createElement('source');
-  source.src = `${folder}/${id}.mp4`;
-  source.type = 'video/mp4';
+      const videoURL = `${folder}/${id}.mp4`;
+      const imageURL = `${folder}/${id}.jpg`;
 
-  video.appendChild(source);
-  video.appendChild(document.createTextNode('Your browser does not support the video tag.'));
+      const isVideo = await fileExists(videoURL);
+      const isImage = await fileExists(imageURL);
 
-  const views = document.createElement('div');
-  views.className = 'video-views';
-  views.textContent = `Loading views...`;
+      /***************
+        SHOW VIDEO
+      ****************/
+      if (isVideo) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "video-wrapper";
 
-  db.collection("videoPlays").doc(id).get().then((doc) => {
-    views.textContent = `Views: ${doc.exists ? doc.data().count : 0}`;
-  }).catch(() => {
-    views.textContent = 'Views: N/A';
-  });
+        const title = document.createElement("div");
+        title.className = "video-title";
+        title.textContent = `${prefix} ${i}`;
 
-  video.addEventListener('play', () => {
-    counted = false; // reset for that specific video
-  });
+        const video = document.createElement("video");
+        video.controls = true;
 
-  video.addEventListener('timeupdate', () => {
-    if (!counted && video.currentTime >= 2) {
-      counted = true;
-      const ref = db.collection("videoPlays").doc(id);
+        const source = document.createElement("source");
+        source.src = videoURL;
+        source.type = "video/mp4";
+        video.appendChild(source);
 
-      db.runTransaction(async (tx) => {
-        const doc = await tx.get(ref);
-        if (doc.exists) {
-          const count = doc.data().count + 1;
-          tx.update(ref, { count });
-          views.textContent = `Views: ${count}`;
-        } else {
-          tx.set(ref, { count: 1 });
-          views.textContent = `Views: 1`;
-        }
-      }).catch((err) => {
-        console.error("Error updating views:", err);
-        views.textContent = "Views: N/A";
-      });
+        const views = document.createElement("div");
+        views.className = "video-views";
+        views.textContent = `Loading views...`;
+
+        // Load view count
+        db.collection("videoPlays").doc(id).get()
+          .then(doc => {
+            views.textContent = `Views: ${doc.exists ? doc.data().count : 0}`;
+          });
+
+        // Track views after 2 seconds of playback
+        let counted = false;
+        video.addEventListener("timeupdate", () => {
+          if (!counted && video.currentTime >= 2) {
+            counted = true;
+            const ref = db.collection("videoPlays").doc(id);
+
+            db.runTransaction(async (tx) => {
+              const doc = await tx.get(ref);
+              const count = doc.exists ? doc.data().count + 1 : 1;
+              tx.set(ref, { count });
+              views.textContent = `Views: ${count}`;
+            });
+          }
+        });
+
+        wrapper.appendChild(title);
+        wrapper.appendChild(video);
+        wrapper.appendChild(views);
+        videoContainer.appendChild(wrapper);
+      }
+
+      /***************
+        SHOW IMAGE
+      ****************/
+      if (isImage) {
+        const card = document.createElement("div");
+        card.className = "image-card";
+
+        const img = document.createElement("img");
+        img.src = imageURL;
+
+        const caption = document.createElement("div");
+        caption.className = "image-title";
+        caption.textContent = `${prefix} ${i}`;
+
+        card.appendChild(img);
+        card.appendChild(caption);
+        imageContainer.appendChild(card);
+      }
     }
-  });
+  }
 
-  wrapper.appendChild(title);
-  wrapper.appendChild(video);
-  wrapper.appendChild(views);
-  container.appendChild(wrapper);
-}
- }
+  // Start loading
+  loadMedia();
+
 </script>
+
 </body>
 </html>
